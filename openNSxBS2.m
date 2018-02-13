@@ -204,13 +204,7 @@ encodingIn = {'Macintosh', ...
               'windows-1254','UTF-8'       ,'windows-1257' };
 for j=1:numel(encodingIn)
     for i = 1:numel(machinefmt)
-        FID = fopen(fullfile(path,fname), 'r', machinefmt{i}, encodingIn{j}); 
-        if int16(FID) > 0
-            disp(['encodingIn=' encodingIn{j} ' machinefmt='  machinefmt{i} ]);
-            my_machinefmt = machinefmt{i};
-            my_encodingIn = encodingIn{j};
-            break;
-        end
+        %2.13.18 deleted FID info; see github
     end
     if int16(FID) > 0
         break;
