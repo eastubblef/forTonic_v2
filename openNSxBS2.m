@@ -1,4 +1,5 @@
-function [NSx] = openNSxBS2(varargin)
+% function NSx = openNSxBS2(varargin)
+NSx = openNSxBS2(filestr2, 'read', 'report', 'electrodes', 'duration', 'mode', 'precision')
 %% BS - line 129 hardcoded
 %% Opens an NSx file for reading, returns all file information in a NSx structure. Works with File Spec 2.1 and 2.2. 
 
@@ -83,7 +84,7 @@ function [NSx] = openNSxBS2(varargin)
 % fpath = '/Volumes/My Passport for Mac/Vgatthree_updated/151105/2ndpass/better/behaveChunks';
 % fpath = '/Users/stubblefielde/Desktop/mfiles/DudmanLab/data/spikes/recordings15/Vgattwo/151119/behave/untag/newBehaveUnits/untagged';
 % fpath = '/Users/stubblefielde/Desktop/mfiles/DudmanLab/data/spikes/recordings15/Vgatthree/151105/newBehaveUnits/behaveChunks';
-fpath = '/Users/stubblefielde/Desktop/mfiles/DudmanLab/data/spikes/recordings16_17/170112/shanks3&4/4thPass/laserSegs';
+% fpath = '/Users/stubblefielde/Desktop/mfiles/DudmanLab/data/spikes/recordings16_17/170112/shanks3&4/4thPass';
 
 NSxver = '2.2';
 disp(['openNSx version ' NSxver])
@@ -154,7 +155,9 @@ else
     [path, fname, fext] = fileparts(fname);
     fname = [fname fext];
 end
-if fname==0; return; end;
+if fname==0
+    return; 
+end
 
 tic;
 
@@ -202,14 +205,28 @@ encodingIn = {'Macintosh', ...
                              'ISO-8859-15' ,'windows-1252',...
               'Shift_JIS',   'windows-1253','US-ASCII',...
               'windows-1254','UTF-8'       ,'windows-1257' };
+
+%         2.13.18 deleted FID info here; see github
+% fileName = strcat(path, '/', fname)
+% fileID = fopen(fileName);
+path = strcat(path, '/');
 for j=1:numel(encodingIn)
     for i = 1:numel(machinefmt)
-        %2.13.18 deleted FID info; see github
+        FID = fopen(fullfile(path,fname), 'r', machinefmt{i}, encodingIn{j}); 
+%                 FID = fopen(fileID, 'r', machinefmt{i}, encodingIn{j}); 
+
+        if int16(FID) > 0
+            disp(['encodingIn=' encodingIn{j} ' machinefmt='  machinefmt{i} ]);
+            my_machinefmt = machinefmt{i};
+            my_encodingIn = encodingIn{j};
+            break;
+        end
     end
-    if int16(FID) > 0
-        break;
-    end
+%     if int16(FID) > 0
+%         break;
+%     end
 end
+
 % General format of calling fread:
 %     FileTypeID = fread(fileID [,sizeA [,precision [,skip [,machinefmt]]]])
 % where
@@ -373,4 +390,4 @@ if strcmp(Report, 'report')
 end
 fclose(FID);
 
-end
+% end

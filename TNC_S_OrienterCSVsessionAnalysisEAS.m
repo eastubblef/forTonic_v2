@@ -1,12 +1,22 @@
 %Updated in Sep. 2017 for alignments to older tagging/recording data:
 
+% fpath = '/Users/stubblefielde/Desktop/mfiles/DudmanLab/data/spikes/recordings16_17/170112/shanks3&4/4thPass';
+% csv_data = dlmread('mVgatfive_2017_01_12_165817pXY.csv',',',2,0);
+% filestr = '/170112002.ns4';
+
+fpath = '/Volumes/My Passport for Mac/170112/behaveSegs/behaveNewUnits';
 csv_data = dlmread('mVgatfive_2017_01_12_165817pXY.csv',',',2,0);
 filestr = '/170112002.ns4';
-% [data] = openNSx('/170112002.ns4');
-% [data] = openNSx(filestr);
-[data] = openNSxBS(filestr);
 
-S = load('170112behave_pop.mat');
+% fpath = '/Volumes/My Passport for Mac/Vgatfive/170118/behaveNewUnits';
+% csv_data = dlmread('mVgatfive_2017_01_18_163328pXY.csv',',',2,0);
+% filestr = '/170118002.ns4';
+
+filestr2 = strcat(fpath, '/', filestr);
+[data] = openNSx(filestr2);              %MUST LOAD THE openNSx.m file from 2016 for this to work
+
+S = load('170112002newBehave_pop');
+% S = load('170118_newBehave_pop.mat');
 
 % csv_data = dlmread('mVgatfive_2017_01_18_163328pXY.csv',',',2,0);
 % filestr = '/170118002.ns4';
@@ -47,7 +57,7 @@ Gaussian = Gaussian./integral;
 
 %%
 figure(3); hold off;
-% x_off = 107700;   %this is the offset of the ns4 file when the noise reflects csv start 170112
+x_off = 107700;   %this is the offset of the ns4 file when the noise reflects csv start 170112
 % x_off = 110530;   %this is the offset of the ns4 file when the noise reflects csv start 170118
 % x_off = 78935;    %this is the offset of the ns4 file when the noise reflects csv start 170111
 % x_off = 128212;   %this is the offset of the ns4 file when the noise reflects csv start 160505

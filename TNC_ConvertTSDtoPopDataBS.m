@@ -30,8 +30,11 @@ function [PopData] = TNC_ConvertTSDtoPopDataBS(source, sessNum, fpath)
 % fpath = '/Users/stubblefielde/Desktop/mfiles/DudmanLab/data/spikes/recordings15/Vgattwo/151119/behave/untag/newBehaveUnits/untagged/';
 % fpath = '/Users/stubblefielde/Desktop/mfiles/DudmanLab/data/spikes/recordings15/Vgatthree/151105/newBehaveUnits/behaveChunks/';
 % fpath = '/Users/stubblefielde/Desktop/mfiles/DudmanLab/data/spikes/recordings15/Vgattwo/151118/behaveChunks/newBehaveUnits/behaveChunks/';
-fpath = '/Users/stubblefielde/Desktop/mfiles/DudmanLab/data/spikes/recordings15/Vgatthree/151104/';
+% fpath = '/Users/stubblefielde/Desktop/mfiles/DudmanLab/data/spikes/recordings15/Vgatthree/151104/';
 % fpath = '/Users/stubblefielde/Desktop/mfiles/DudmanLab/data/spikes/recordings15/Vgatthree/151106/behave/newUnits/';
+% fpath = '/Volumes/My Passport for Mac/170112/behaveSegs/behaveNewUnits/';
+fpath = '/Volumes/My Passport for Mac/Vgatfive/170118/behaveNewUnits/';
+
 cd(fpath); 
 source = fpath;
 sessNum = 1;
