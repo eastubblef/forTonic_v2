@@ -73,7 +73,7 @@ end
     % determine how to calculate segments
     switch numel(chunk)
         case 1
-            numSegs = ceil(Ns5DATA.MetaTags.Duration ./ chunk); %%2.6.18 Changed to actually call the duration properly from the field
+            numSegs = ceil(Ns5DATA.MetaTags.DataDurationSec ./ chunk); %%2.6.18 Changed to actually call the duration properly from the field
             timeOffset = 0;
             for k=1:numSegs
                 seg_txt{k} = ['t:' num2str((k-1)*chunk) ':' num2str(k*chunk)]

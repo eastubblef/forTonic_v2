@@ -37,7 +37,7 @@ chan.x = [];
 
 %% Continuous Data structure is returned with ContData.behavior.threshInds = TS for behavioral events (i.e., laser pulses) 
 
-% targetName = '170112behave3';
+% targetName = '170112newBehave';
 % targetName = '170321behave';
 % targetName = '170508Behave';
 % targetName = '170501_testBehave';
@@ -45,10 +45,10 @@ chan.x = [];
 % targetName = '170718behaveSC2';
 % targetName = '170118behave';
 % targetName = '170111behave';
-% targetName = '171012laser';
+targetName = '171012';
 % targetName = '170428';
-% targetName = '170111002newBehave';
-targetName = '170118_newBehave';
+% targetName = '170111newBehave';
+% targetName = '170118_newBehave';
 
 elimTime = 270;                                                             % (s) [for 90 s chunks, and elimination of first # chunks, if needed]
 
@@ -72,8 +72,10 @@ elimTime = 270;                                                             % (s
 % initPath = '/Users/stubblefielde/Desktop/mfiles/DudmanLab/data/spikes/recordings16_17/160505';
 % initPath = '/Users/stubblefielde/Desktop/mfiles/DudmanLab/data/spikes/recordings16_17/171012';
 % initPath = '/Users/stubblefielde/Desktop/mfiles/DudmanLab/data/spikes/recordings16_17/forWhisper';
-% initPath = '/Volumes/My Passport for Mac/170112/behaveSegs/behaveNewUnits';
-initPath = '/Volumes/My Passport for Mac/Vgatfive/170118/behaveNewUnits';
+% initPath = '/Volumes/My Passport for Mac/170111/newBehaveUnits';
+% initPath = '/Users/stubblefielde/Desktop/mfiles/DudmanLab/data/spikes/recordings16_17/170112/shanks3&4/4thPass/behaveSegs/behaveNewUnits';
+initPath = '/Volumes/My Passport for Mac/171012/newBehaveUnits';
+% initPath = '/Volumes/My Passport for Mac/Vgatfive/170118/behaveNewUnits';
 %% Load the extracted behavior file structure:
 
 % taskbaseFile = 'mVgatseven_tb.mat';
@@ -83,12 +85,13 @@ initPath = '/Volumes/My Passport for Mac/Vgatfive/170118/behaveNewUnits';
 % taskbaseFile = '170428';
 
 % taskbaseFile = '170111';
-% taskbaseFile = '171012';
+taskbaseFile = '171012';
 % taskbaseFile = '151105';
 % taskbaseFile = '170602';
 % taskbaseFile = '170627';
 % taskbaseFile = '170718';
-taskbaseFile = '170118';
+% taskbaseFile = '170118';
+% taskbaseFile = '170112';
 
 taskbase = strcat(initPath,'/', taskbaseFile);
 filestr = taskbase;

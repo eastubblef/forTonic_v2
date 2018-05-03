@@ -98,6 +98,7 @@
 %         xChan = find(Ns4DATA.MetaTags.ChannelID==chan.x);                 %my x channel is empty  
 %         yChan = find(Ns4DATA.MetaTags.ChannelID==chan.y);                 %motor in; then lick; now motor
 %         lChan = find(Ns4DATA.MetaTags.ChannelID==chan.lick);
+       
         thrChan = find(Ns4DATA.MetaTags.ChannelID==chan.thr);               %lick channel (Ain 2)
         yChan =   find(Ns4DATA.MetaTags.ChannelID==chan.y);                 %wheel motor channel (Ain 3)
         trialStrtsChan = find(Ns4DATA.MetaTags.ChannelID==chan.rew);        %trial start/sol channel (Ain 1)
@@ -119,7 +120,11 @@
 %      plot(trialStrtsNSolData(1:250000));
 %      plot(trialStrtsNSolData(60000:100000));
      plot(trialStrtsNSolData,'k');
-     plot(wheel, 'bl');
+%      plot(wheel, 'bl');
+     
+     wheel_golay = sgolayfilt(wheel, 9, 101);
+     figure;
+     plot(wheel_golay); xlim([1e5 1.5e5]); title(taskbase);
 %      plot(lick, 'r');
 %      plot(laserTSms, 0.2e4, 'bl.');
      title(targetName);

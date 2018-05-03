@@ -46,7 +46,10 @@ chan.x = [];
 % targetName = '170118behave';
 % targetName = '170111behave';
 % targetName = '171012laser';
-targetName = '170428';
+% targetName = '170428';
+% targetName = '171013laser';
+% targetName = '171012';
+targetName = '171013';
 
 elimTime = 270;                                                             % (s) [for 90 s chunks, and elimination of first # chunks, if needed]
 
@@ -69,7 +72,9 @@ elimTime = 270;                                                             % (s
 % initPath = '/Users/stubblefielde/Desktop/mfiles/DudmanLab/data/spikes/recordings16_17/170118';
 % initPath = '/Users/stubblefielde/Desktop/mfiles/DudmanLab/data/spikes/recordings16_17/160505';
 % initPath = '/Users/stubblefielde/Desktop/mfiles/DudmanLab/data/spikes/recordings16_17/171012';
-initPath = '/Users/stubblefielde/Desktop/mfiles/DudmanLab/data/spikes/recordings16_17/forWhisper';
+% initPath = '/Users/stubblefielde/Desktop/mfiles/DudmanLab/data/spikes/recordings16_17/forWhisper';
+initPath = '/Volumes/My Passport for Mac/171013/behaveNewUnits';
+% initPath = '/Volumes/My Passport for Mac/171012/newBehaveUnits';
 
 %% Load the extracted behavior file structure:
 
@@ -77,8 +82,9 @@ initPath = '/Users/stubblefielde/Desktop/mfiles/DudmanLab/data/spikes/recordings
 % taskbaseFile = 'mVgatfive_tb.mat';
 % taskbaseFile = '170501test';
 % taskbaseFile = '170508test';
-taskbaseFile = '170428';
+% taskbaseFile = '170428';
 
+taskbaseFile = '171013';
 % taskbaseFile = '170111';
 % taskbaseFile = '171012';
 % taskbaseFile = '151105';

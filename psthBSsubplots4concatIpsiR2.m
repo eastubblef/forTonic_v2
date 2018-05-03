@@ -1,5 +1,5 @@
 
-function [psthMat] = psthBSsubplots4concatIpsiR2(PopData, behavFile, units, alignVar1, alignVar2)
+function [psthMat, psthMatStr] = psthBSsubplots4concatIpsiR2(PopData, behavFileStr, units, alignVar1, alignVar2, alignVar1str, alignVar2str, taggedNeurons)
 %% This m file calls Josh's code in order to plot psths (as subplots like oneUnitAlignSpike code for rasters plots)
 % calls the following mfiles:
 % TNC_createGaussian.m - explanatory
@@ -100,9 +100,13 @@ currParams.smthParams.decay    = 15.4;
 
 % alignVarMat = NaN(1000, 1000);  %added this section 11.2017 for building a matrix for dim reduction
 psthMat = [];
+psthMatStr = {}; %fill this with strings for indexing later on
+
 for i = 1:length(PopData.session)
     figure; hold on; 
-    plotname = '151119moveOn';
+%     plotname = '151119moveOn';
+    plotname = char(behavFileStr);
+
     dimm=ceil(sqrt(length(units))); %
 
     for j = 1:length(units)
@@ -115,27 +119,13 @@ for i = 1:length(PopData.session)
         tmpSmooth = conv(delta,currParams.filter.kernel,'same');
         psthWin = [1.0e3,2e3]; % best for 151105 data        
         subplot(dimm,dimm,j); hold on; 
-        
-%         % second plot
-%         [respCSS2] = TNC_AlignRasters(tmpSmooth,PopData.session(i).unit(j).ts, PopData.currParams.stableTrials, alignVar2, psthWin, 1, 0);
-%             h(j) = plot([-(psthWin(1)) psthWin(2)],[0 0]); 
-%             set(h(j), 'Color',[0.2 0.2 0.2]);
-%             ylabel('Firing Rate'); xlabel('ms'); 
-%         shadedErrorBar(-psthWin(1):psthWin(2), respCSS2.image.psthZ, respCSS2.image.psthZe,'r');  %red for right; for 151105 data = contra
-                
-%         first plot
+                        
+%       first plot
         [respCSS] = TNC_AlignRasters(tmpSmooth,PopData.session(i).unit(j).ts, PopData.currParams.stableTrials, alignVar1, psthWin, 1, 1); 
-
+        
         unitname = num2str(j);
-%         dir = plotname
-%         plotName = strcat('u#', unitname, '- ', dir);
-%             h(j) = plot([-(psthWin(1)) psthWin(2)],[0 0]); 
-%             set(h(j), 'Color',[0.2 0.2 0.2]);
-%             ylabel('Firing Rate'); xlabel('ms'); 
         shadedErrorBar(-psthWin(1):psthWin(2), respCSS.image.psthZ, respCSS.image.psthZe,'bl');  %blue for left; for 151105 dataset = ipsi
 %         
-
-
         %second plot
         [respCSS2] = TNC_AlignRasters(tmpSmooth,PopData.session(i).unit(j).ts, PopData.currParams.stableTrials, alignVar2, psthWin, 1, 1);
             h(j) = plot([-(psthWin(1)) psthWin(2)],[0 0]); 
@@ -145,28 +135,99 @@ for i = 1:length(PopData.session)
 %  
         title(plotname);
         
-        psthAvg1 = respCSS.image.psthAVG';
-        psthAvg2 = respCSS2.image.psthAVG';
-%         alignVar1 = alignVar1';
-%         alignVar2 = alignVar2';
+%         psthAvg1 = respCSS.image.psthAVG';
+%         psthAvg2 = respCSS2.image.psthAVG';
+        psthAvg1 = respCSS.image.psthZ';
+        psthAvg2 = respCSS2.image.psthZ';
     
+%         for z = 1:length(psthAvg1)
+%             if j == 1
+%                 psthMat(z,j) = psthAvg1(z);
+%                  psthMatStr{1,j} = char(behavFileStr(1:6));
+%                  psthMatStr{2,j} = char(strcat('u', num2str(unitname)));
+%                  psthMatStr{3,j} = char(alignVar1str);
+% 
+%             else
+%                 psthAvg1 = respCSS.image.psthZ';
+%                 psthMat(z,j+(j-1)) = psthAvg1(z);
+%                  psthMatStr{1,j+(j-1)} = char(behavFileStr(1:6));
+%                  psthMatStr{2,j+(j-1)} = char(strcat('u', num2str(unitname)));
+%                  psthMatStr{3,j+(j-1)} = char(alignVar1str);
+%             end
+%         end
+%         for zz = 1:length(psthAvg2)
+%             if j == 1
+%                  psthMat(zz,j*2) = psthAvg2(zz); 
+%                  psthMatStr{1,j*2} = char(behavFileStr(1:6));
+%                  psthMatStr{2,j*2} = char(strcat('u', num2str(unitname)));
+%                  psthMatStr{3,j*2} = char(alignVar2str);
+% 
+%             else 
+%                 psthAvg2 = respCSS2.image.psthZ';
+%                 psthMat(zz,j*2) = psthAvg2(zz);
+%                 psthMatStr{1,j*2} = char(behavFileStr(1:6));
+%                 psthMatStr{2,j*2} = char(strcat('u', num2str(unitname)));
+%                 psthMatStr{3,j*2} = char(alignVar2str);
+% 
+%             end
+%         end
+% %         clear psthAvg1; clear psthAvg2;
+%     end
+% end
         for z = 1:length(psthAvg1)
             if j == 1
                 psthMat(z,j) = psthAvg1(z);
+                psthMatStr{1,j} = char(behavFileStr(1:6));
+                psthMatStr{2,j} = char(strcat('u', num2str(unitname)));
+                psthMatStr{3,j} = char(alignVar1str);
+                psthMatStr{4,j} = char('untagged');
+                psthMatStr{5,j} = char('rand');
+                
             else
-                psthAvg1 = respCSS.image.psthAVG';
+                psthAvg1 = respCSS.image.psthZ';
                 psthMat(z,j+(j-1)) = psthAvg1(z);
+                psthMatStr{1,j+(j-1)} = char(behavFileStr(1:6));
+                psthMatStr{2,j+(j-1)} = char(strcat('u', num2str(unitname)));
+                psthMatStr{3,j+(j-1)} = char(alignVar1str);
+                
+                if j == taggedNeurons(1) || j == taggedNeurons(2) || j == taggedNeurons(3)
+                    psthMatStr{4,j+(j-1)} = char('tag');
+                else
+                    psthMatStr{4,j+(j-1)} = char('untagged');
+                end
+                psthMatStr{5,j} = char('rand');
             end
         end
-        for z = 1:length(psthAvg2)
+        for zz = 1:length(psthAvg2)
             if j == 1
-                 psthMat(z,j*2) = psthAvg2(z);
-            else 
-                psthAvg2 = respCSS2.image.psthAVG';
-                psthMat(z,j*2) = psthAvg2(z);
+                psthMat(zz,j*2) = psthAvg2(zz);
+                %                  psthMatStr{1,j*2} = char(behavFileStr(1:6));
+                psthMatStr{1,j*2} = char(behavFileStr(1:6));
+                psthMatStr{2,j*2} = char(strcat('u', num2str(unitname)));
+                psthMatStr{3,j*2} = char(alignVar2str);
+                psthMatStr{4,j*2} = char('untagged');
+                %                  psthMatStr{5,j*2} = char('tag');
+                psthMatStr{5,j*2} = char('rand');
+            else
+                %                 psthAvg2 = respCSS2.image.psthAVG';
+                psthAvg2 = respCSS2.image.psthZ';
+                psthMat(zz,j*2) = psthAvg2(zz);           %This should make col 1 = alignVar1; col2 = alignVar2 for ea. unit to build psthMat
+                psthMatStr{1,j*2} = char(behavFileStr(1:6));
+                psthMatStr{2,j*2} = char(strcat('u', num2str(unitname)));
+                psthMatStr{3,j*2} = char(alignVar2str);
+                
+                if j == taggedNeurons(1) || j == taggedNeurons(2) || j == taggedNeurons(3)
+                    psthMatStr{4,j*2} = char('tag');
+                else
+                    psthMatStr{4,j*2} = char('untagged');
+                end
+                %                 psthMatStr{4,j*2} = char('untagged');
+                %                 psthMatStr{5,j*2} = char('tag');
+                psthMatStr{5,j*2} = char('rand');
             end
         end
-        clear psthAvg1; clear psthAvg2;
+        %     clear psthAvg1; clear psthAvg2; clear unitname; clear alignVar1str; clear alignVar2str
+        
     end
 end
 

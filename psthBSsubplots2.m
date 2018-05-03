@@ -19,9 +19,12 @@ function [alignVarMat] = psthBSsubplots2(popFile, behavFile, units, alignVar1, a
 % fpath = '/Users/stubblefielde/Desktop/mfiles/DudmanLab/data/spikes/recordings15/Vgatthree/151105';
 
 % fpath = '/Users/stubblefielde/Desktop/mfiles/DudmanLab/data/spikes/recordings15/Vgattwo/151119/behave/untag/newBehaveUnits/untagged';
-fpath = '/Users/stubblefielde/Desktop/mfiles/DudmanLab/data/spikes/recordings15/Vgatthree/151105/newBehaveUnits/behaveChunks';
+% fpath = '/Users/stubblefielde/Desktop/mfiles/DudmanLab/data/spikes/recordings15/Vgatthree/151105/newBehaveUnits/behaveChunks';
 % fpath = '/Users/stubblefielde/Desktop/mfiles/DudmanLab/data/spikes/recordings15/Vgattwo/151118/behaveChunks/newBehaveUnits/behaveChunks';
 % fpath = '/Users/stubblefielde/Desktop/mfiles/DudmanLab/data/spikes/recordings15/Vgatthree/151106/behave/newUnits';
+
+fpath = '/Volumes/My Passport for Mac/170111/newBehaveUnits';
+
 %%
 % fname = strcat(fpath, '/', '151119_tag_pop.mat');
 % behavFile = strcat(fpath, '/', '151119_tag_bh.mat');
@@ -68,8 +71,11 @@ fpath = '/Users/stubblefielde/Desktop/mfiles/DudmanLab/data/spikes/recordings15/
 % behavFile = strcat(fpath,'/', '151105_newUnits2Behave_bh.mat');
 % popFile = strcat(fpath, '/', '151105_newUnits2Behave_pop.mat');
 
-behavFile = strcat(fpath,'/', '151105_newUnits2BehaveRxn_bh.mat'); 
-popFile = strcat(fpath, '/', '151105_newUnits2BehaveRxn_pop.mat');
+% behavFile = strcat(fpath,'/', '151105_newUnits2BehaveRxn_bh.mat'); 
+% popFile = strcat(fpath, '/', '151105_newUnits2BehaveRxn_pop.mat');
+
+behavFile = strcat(fpath,'/', '170111_bh3.mat'); 
+popFile = strcat(fpath, '/', '170111newBehave_pop.mat');
 
 
 
@@ -85,18 +91,23 @@ units = pop.session.unit;  %for Tonic data
 varargin = units;
 
 load(behavFile)
-behavior = ContData.behavior;
+% behavior = ContData.behavior;
+behavior = export_mvmt_data_for_psths;
 
 % trialStarts = behavior.trialStarts;
 % LrewTrialStarts = behavior.LrewTrialStarts;
 % RrewTrialStarts = behavior.RrewTrialStarts;
 % % LincorrectTrialStarts = behavior.LincorrectTrialStarts;
 % % RincorrectTrialStarts = behavior.RincorrectTrialStarts;
-wheelsLfirstValid = behavior.wheelsLfirstValid;
-wheelsRfirstValid = behavior.wheelsRfirstValid;
+wheelsLfirstValid = behavior.wheelLfirstValid;
+wheelsRfirstValid = behavior.wheelRfirstValid;
 
-wheelsLslowRxn = behavior.wheelsLslowRxn;
-wheelsRslowRxn = behavior.wheelsRslowRxn;
+% wheelsLfirstValid = behavior.wheelsLfirstValid;
+% wheelsRfirstValid = behavior.wheelsRfirstValid;
+
+
+% wheelsLslowRxn = behavior.wheelsLslowRxn;
+% wheelsRslowRxn = behavior.wheelsRslowRxn;
 % 
 % wheelsILfirstValid = behavior.wheelsILfirstValid;
 % wheelsIRfirstValid = behavior.wheelsIRfirstValid;
@@ -110,15 +121,15 @@ wheelsRslowRxn = behavior.wheelsRslowRxn;
 % wheel_R_first = behavior.wheel_R_first;
 % 
 
-alignVar1 = wheelsLslowRxn;    %151105: L = ipsi (dotted) for Gidon
-alignVar2 = wheelsRslowRxn;    %151105: R = contra (solid) for Gidon
+% alignVar1 = wheelsLslowRxn;    %151105: L = ipsi (dotted) for Gidon
+% alignVar2 = wheelsRslowRxn;    %151105: R = contra (solid) for Gidon
 
 
 % alignVar1 = behavior.wheelsRfirstValid;    %151119: R = ipsi (dotted) for Gidon
 % alignVar2 = behavior.wheelsLfirstValid;    %151119: L = contra (solid) for Gidon
 
-% alignVar1 = behavior.wheelsLfirstValid;    %151105: L = ipsi (dotted) for Gidon
-% alignVar2 = behavior.wheelsRfirstValid;    %151105: R = contra (solid) for Gidon
+alignVar1 = behavior.wheelLfirstValid;    %151105: L = ipsi (dotted) for Gidon
+alignVar2 = behavior.wheelRfirstValid;    %151105: R = contra (solid) for Gidon
 
 % alignVar1 = behavior.trialStartsValid;
 % alignVar1 = ContData.behavior.LrewTrialStarts;

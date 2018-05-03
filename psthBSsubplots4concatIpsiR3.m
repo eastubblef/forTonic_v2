@@ -1,11 +1,16 @@
 
-function [psthMat, psthMatStr] = psthBSsubplots4concatIpsiL2(PopData, behavFileStr, units, alignVar1, alignVar2, alignVar1str, alignVar2str, taggedNeurons)
+function [psthMat, psthMatStr] = psthBSsubplots4concatIpsiR3(PopData, behavFileStr, units, alignVar1, alignVar2, alignVar1str, alignVar2str, taggedNeurons, session)
 %% This m file calls Josh's code in order to plot psths (as subplots like oneUnitAlignSpike code for rasters plots)
 % calls the following mfiles:
+
 % TNC_createGaussian.m - explanatory
 % TNC_alignRasters.m -  for creating inputted time window (line 81), setting the inputted zero-alignment of pop data (units) to behavioral data (behavFile)
 % corresponding to ipsi v contra "alignVars 1 & 2" (lines 51 & 52) 
 % shadedErrorBar.m -  for plotting 
+
+%% Updated 3.20.18 to generate strings & psths 
+
+% Run this in conjunction with concatPopDataNew_wIncorr_rxnString.m
 
 % fpath = '/Users/stubblefielde/Desktop/mfiles/DudmanLab/data/spikes/recordings15/Vgattwo/151119/behave/tag';
 % fpath = '/Users/stubblefielde/Desktop/mfiles/DudmanLab/data/spikes/recordings15/Vgattwo/151118/behaveChunks';
@@ -58,12 +63,9 @@ function [psthMat, psthMatStr] = psthBSsubplots4concatIpsiL2(PopData, behavFileS
 % 
 % % units1 = unit(5);
 % units = 1:length(units1);
-if numel(units) == 1
-    units = PopData.session.unit(1);
-else
 units = 1:length(PopData.session.unit);    % plots all of them
 varargin = units;
-end
+
 % load(behavFile)
 % behavior = ContData.behavior;
 
@@ -102,8 +104,9 @@ currParams.smthParams.decay    = 15.4;
 [currParams.filter.kernel]  = TNC_CreateGaussian(currParams.smthParams.decay.*15,currParams.smthParams.decay,currParams.smthParams.decay.*30,1);
 
 % alignVarMat = NaN(1000, 1000);  %added this section 11.2017 for building a matrix for dim reduction
-psthMatStr = {}; %fill this with strings
 psthMat = [];
+psthMatStr = {}; %fill this with strings for indexing later on
+
 for i = 1:length(PopData.session)
     figure; hold on; 
 %     plotname = '151119moveOn';
@@ -112,6 +115,8 @@ for i = 1:length(PopData.session)
     dimm=ceil(sqrt(length(units))); %
 
     for j = 1:length(units)
+          for k = 1:length(taggedNeurons)
+
         numStamps = length(PopData.session(i).unit(j).ts);
         delta = zeros(1,ceil(PopData.session(i).unit(j).ts(numStamps)));
         delta(1,ceil(PopData.session(i).unit(j).ts)) = 1;
@@ -119,29 +124,34 @@ for i = 1:length(PopData.session)
 %         x = 1,ceil(PopData.session(i).unit(j).ts);
 %         delta(x) = 1;
         tmpSmooth = conv(delta,currParams.filter.kernel,'same');
-        psthWin = [1.0e3,2e3]; % best for 151105 data        
+%         psthWin = [1.0e3,2e3]; % best for 151105 data        
+                
+        psthWin = [2.0e3,2e3]; % best for 151105 data
         subplot(dimm,dimm,j); hold on; 
-        
+                        
 %       first plot
         [respCSS] = TNC_AlignRasters(tmpSmooth,PopData.session(i).unit(j).ts, PopData.currParams.stableTrials, alignVar1, psthWin, 1, 1); 
-
+        
         unitname = num2str(j);
         shadedErrorBar(-psthWin(1):psthWin(2), respCSS.image.psthZ, respCSS.image.psthZe,'bl');  %blue for left; for 151105 dataset = ipsi
-        
+%         
         %second plot
         [respCSS2] = TNC_AlignRasters(tmpSmooth,PopData.session(i).unit(j).ts, PopData.currParams.stableTrials, alignVar2, psthWin, 1, 1);
             h(j) = plot([-(psthWin(1)) psthWin(2)],[0 0]); 
             set(h(j), 'Color',[0.2 0.2 0.2]);
             ylabel('Firing Rate'); xlabel('ms'); 
         shadedErrorBar(-psthWin(1):psthWin(2), respCSS2.image.psthZ, respCSS2.image.psthZe,'r');  %red for right; for 151105 data = contra
-  
-%         title(plotname);
-        title(behavFileStr(1:6));
-
-        psthAvg1 = respCSS.image.psthZ';
-        psthAvg2 = respCSS2.image.psthZ';        
+%  
+        title(plotname);
         
-        for z = 1:length(psthAvg1)
+%         psthAvg1 = respCSS.image.psthAVG';
+%         psthAvg2 = respCSS2.image.psthAVG';
+        psthAvg1 = respCSS.image.psthZ';
+        psthAvg2 = respCSS2.image.psthZ';
+    
+        
+                for z = 1:length(psthAvg1)
+            
             if j == 1
                 psthMat(z,j) = psthAvg1(z);
                 psthMatStr{1,j} = char(behavFileStr(1:6));
@@ -156,18 +166,18 @@ for i = 1:length(PopData.session)
                 psthMatStr{1,j+(j-1)} = char(behavFileStr(1:6));
                 psthMatStr{2,j+(j-1)} = char(strcat('u', num2str(unitname)));
                 psthMatStr{3,j+(j-1)} = char(alignVar1str);
-                
-                if numel(taggedNeurons) == 2 && j == taggedNeurons(1) || j == taggedNeurons(2) 
-                    psthMatStr{4,j+(j-1)} = char('tag');
-%                     if numel(taggedNeurons) == 3 && j == taggedNeurons(1) || j == taggedNeurons(2) || j == taggedNeurons(3)%|| j == taggedNeurons(3)%|| j == taggedNeurons(3)
-%                     psthMatStr{4,j+(j-1)} = char('tag');
-% %                     if numel(taggedNeurons == 3) && j == taggedNeurons(1) || j == taggedNeurons(2) || j == taggedNeurons(3)%|| j == taggedNeurons(3)
-% %                         psthMatStr{4,j+(j-1)} = char('tag');
-                    else
-                        psthMatStr{4,j+(j-1)} = char('untagged');
-                end
-%                 end
+                %                     psthMatStr{4,j+(j-1)} = char('untagged');
                 psthMatStr{5,j+(j-1)} = char('rand');
+                
+                %                 for k = 1:length(taggedNeurons)
+                if taggedNeurons(k) == j
+                    psthMatStr{4,j+(j-1)} = char('tag');
+                    if k < length(taggedNeurons)
+                        k = k+1;
+                        break
+                        % %                     else psthMatStr{4,j+(j-1)} = char('untagged');
+                    end
+                end
             end
         end
         
@@ -177,7 +187,7 @@ for i = 1:length(PopData.session)
                 psthMatStr{1,j*2} = char(behavFileStr(1:6));
                 psthMatStr{2,j*2} = char(strcat('u', num2str(unitname)));
                 psthMatStr{3,j*2} = char(alignVar2str);
-                psthMatStr{4,j*2} = char('untagged');
+%                 psthMatStr{4,j*2} = char('untagged');
                 psthMatStr{5,j*2} = char('rand');
             else
                 psthAvg2 = respCSS2.image.psthZ';
@@ -185,32 +195,124 @@ for i = 1:length(PopData.session)
                 psthMatStr{1,j*2} = char(behavFileStr(1:6));
                 psthMatStr{2,j*2} = char(strcat('u', num2str(unitname)));
                 psthMatStr{3,j*2} = char(alignVar2str);
-                
-                if numel(taggedNeurons) == 2 && j == taggedNeurons(1) || j == taggedNeurons(2) 
-                    psthMatStr{4,j*2} = char('tag');
-%                     if numel(taggedNeurons) == 3 && j == taggedNeurons(1) || j == taggedNeurons(2) || j == taggedNeurons(3)%|| j == taggedNeurons(3)
-%                     psthMatStr{4,j*2} = char('tag');
-                    else
-                        psthMatStr{4,j*2} = char('untagged');
-                end
+                %                     psthMatStr{4,j*2} = char('untagged');
                 psthMatStr{5,j*2} = char('rand');
-            end
+                
+                if taggedNeurons(k) == j
+                    psthMatStr{4,j*2} = char('tag');
+                    
+                    if k < length(taggedNeurons)
+                        k = k+1;
+                        break
+                    end
+                    %                     else psthMatStr{4,j*2} = char('untagged');
+                end
+              end
+           end
         end
-        %     clear psthAvg1; clear psthAvg2; clear unitname; clear alignVar1str; clear alignVar2str
-        
     end
 end
-% psthMatString = [];
-% psthMatStringFile = char(psthMatStr{1,:});
-% psthMatStringUnit = char(psthMatStr{2,:});
-% psthMatStringTrial = char(psthMatStr{3,:});
 
+        
+        
+%% This section only works for 171013 data:
 
-%Last line is the key part. The AlignRasters code is looking for:
-%[response] = TNC_AlignRasters(continuous spike density function,timestamps for spikes,omit how many trials at beginning?,time stamps to align to,how much time before and adter, want raster plot structured data?, want a boxcar histogram of response?)
-
-
-% plot the output something like this:
-
-%         plot([-psthWin(1) psthWin(2)],[0 0],'-','Color',[0.2 0.2 0.2]);
-%         shadedErrorBar(-psthWin(1):psthWin(2), respCSS.image.psthZ, respCSS.image.psthZe,'k');
+%         for z = 1:length(psthAvg1)
+%             if j == 1
+%                 psthMat(z,j) = psthAvg1(z);
+%                  psthMatStr{1,j} = char(behavFileStr(1:6));
+%                  psthMatStr{2,j} = char(strcat('u', num2str(unitname)));
+%                  psthMatStr{3,j} = char(alignVar1str);
+% 
+%             else
+%                 psthAvg1 = respCSS.image.psthZ';
+%                 psthMat(z,j+(j-1)) = psthAvg1(z);
+%                  psthMatStr{1,j+(j-1)} = char(behavFileStr(1:6));
+%                  psthMatStr{2,j+(j-1)} = char(strcat('u', num2str(unitname)));
+%                  psthMatStr{3,j+(j-1)} = char(alignVar1str);
+%             end
+%         end
+%         for zz = 1:length(psthAvg2)
+%             if j == 1
+%                  psthMat(zz,j*2) = psthAvg2(zz); 
+%                  psthMatStr{1,j*2} = char(behavFileStr(1:6));
+%                  psthMatStr{2,j*2} = char(strcat('u', num2str(unitname)));
+%                  psthMatStr{3,j*2} = char(alignVar2str);
+% 
+%             else 
+%                 psthAvg2 = respCSS2.image.psthZ';
+%                 psthMat(zz,j*2) = psthAvg2(zz);
+%                 psthMatStr{1,j*2} = char(behavFileStr(1:6));
+%                 psthMatStr{2,j*2} = char(strcat('u', num2str(unitname)));
+%                 psthMatStr{3,j*2} = char(alignVar2str);
+% 
+%             end
+%         end
+% %         clear psthAvg1; clear psthAvg2;
+%     end
+% end
+%         for z = 1:length(psthAvg1)
+%             if j == 1
+%                 psthMat(z,j) = psthAvg1(z);
+%                 psthMatStr{1,j} = char(behavFileStr(1:6));
+%                 psthMatStr{2,j} = char(strcat('u', num2str(unitname)));
+%                 psthMatStr{3,j} = char(alignVar1str);
+%                 psthMatStr{4,j} = char('untagged');
+%                 psthMatStr{5,j} = char('rand');
+%                 
+%             else
+%                 psthAvg1 = respCSS.image.psthZ';
+%                 psthMat(z,j+(j-1)) = psthAvg1(z);
+%                 psthMatStr{1,j+(j-1)} = char(behavFileStr(1:6));
+%                 psthMatStr{2,j+(j-1)} = char(strcat('u', num2str(unitname)));
+%                 psthMatStr{3,j+(j-1)} = char(alignVar1str);
+%                 
+%                 if j == taggedNeurons(1) || j == taggedNeurons(2) || j == taggedNeurons(3)
+%                     psthMatStr{4,j+(j-1)} = char('tag');
+%                 else
+%                     psthMatStr{4,j+(j-1)} = char('untagged');
+%                 end
+%                 psthMatStr{5,j} = char('rand');
+%             end
+%         end
+%         for zz = 1:length(psthAvg2)
+%             if j == 1
+%                 psthMat(zz,j*2) = psthAvg2(zz);
+%                 %                  psthMatStr{1,j*2} = char(behavFileStr(1:6));
+%                 psthMatStr{1,j*2} = char(behavFileStr(1:6));
+%                 psthMatStr{2,j*2} = char(strcat('u', num2str(unitname)));
+%                 psthMatStr{3,j*2} = char(alignVar2str);
+%                 psthMatStr{4,j*2} = char('untagged');
+%                 %                  psthMatStr{5,j*2} = char('tag');
+%                 psthMatStr{5,j*2} = char('rand');
+%             else
+%                 %                 psthAvg2 = respCSS2.image.psthAVG';
+%                 psthAvg2 = respCSS2.image.psthZ';
+%                 psthMat(zz,j*2) = psthAvg2(zz);           %This should make col 1 = alignVar1; col2 = alignVar2 for ea. unit to build psthMat
+%                 psthMatStr{1,j*2} = char(behavFileStr(1:6));
+%                 psthMatStr{2,j*2} = char(strcat('u', num2str(unitname)));
+%                 psthMatStr{3,j*2} = char(alignVar2str);
+%                 
+%                 if j == taggedNeurons(1) || j == taggedNeurons(2) || j == taggedNeurons(3)
+%                     psthMatStr{4,j*2} = char('tag');
+%                 else
+%                     psthMatStr{4,j*2} = char('untagged');
+%                 end
+%                 %                 psthMatStr{4,j*2} = char('untagged');
+%                 %                 psthMatStr{5,j*2} = char('tag');
+%                 psthMatStr{5,j*2} = char('rand');
+%             end
+%         end
+%         %     clear psthAvg1; clear psthAvg2; clear unitname; clear alignVar1str; clear alignVar2str
+%         
+%     end
+% end
+% 
+% %Last line is the key part. The AlignRasters code is looking for:
+% %[response] = TNC_AlignRasters(continuous spike density function,timestamps for spikes,omit how many trials at beginning?,time stamps to align to,how much time before and adter, want raster plot structured data?, want a boxcar histogram of response?)
+% 
+% 
+% % plot the output something like this:
+% 
+% %         plot([-psthWin(1) psthWin(2)],[0 0],'-','Color',[0.2 0.2 0.2]);
+% %         shadedErrorBar(-psthWin(1):psthWin(2), respCSS.image.psthZ, respCSS.image.psthZe,'k');

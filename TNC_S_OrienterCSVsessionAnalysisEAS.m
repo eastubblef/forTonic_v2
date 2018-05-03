@@ -1,22 +1,23 @@
 %Updated in Sep. 2017 for alignments to older tagging/recording data:
+%% Must set the timescale offset at line 60ish per session!
 
 % fpath = '/Users/stubblefielde/Desktop/mfiles/DudmanLab/data/spikes/recordings16_17/170112/shanks3&4/4thPass';
 % csv_data = dlmread('mVgatfive_2017_01_12_165817pXY.csv',',',2,0);
 % filestr = '/170112002.ns4';
 
-fpath = '/Volumes/My Passport for Mac/170112/behaveSegs/behaveNewUnits';
-csv_data = dlmread('mVgatfive_2017_01_12_165817pXY.csv',',',2,0);
-filestr = '/170112002.ns4';
+% fpath = '/Volumes/My Passport for Mac/170112/behaveSegs/behaveNewUnits';
+% csv_data = dlmread('mVgatfive_2017_01_12_165817pXY.csv',',',2,0);
+% filestr = '/170112002.ns4';
 
-% fpath = '/Volumes/My Passport for Mac/Vgatfive/170118/behaveNewUnits';
-% csv_data = dlmread('mVgatfive_2017_01_18_163328pXY.csv',',',2,0);
-% filestr = '/170118002.ns4';
+fpath = '/Volumes/My Passport for Mac/171012/newBehaveUnits';
+csv_data = dlmread('mVgatfive_2017_01_18_163328pXY.csv',',',2,0);
+filestr = '/170118002.ns4';
 
 filestr2 = strcat(fpath, '/', filestr);
 [data] = openNSx(filestr2);              %MUST LOAD THE openNSx.m file from 2016 for this to work
 
-S = load('170112002newBehave_pop');
-% S = load('170118_newBehave_pop.mat');
+% S = load('170112002newBehave_pop');
+S = load('170118_newBehave_pop.mat');
 
 % csv_data = dlmread('mVgatfive_2017_01_18_163328pXY.csv',',',2,0);
 % filestr = '/170118002.ns4';
@@ -57,8 +58,8 @@ Gaussian = Gaussian./integral;
 
 %%
 figure(3); hold off;
-x_off = 107700;   %this is the offset of the ns4 file when the noise reflects csv start 170112
-% x_off = 110530;   %this is the offset of the ns4 file when the noise reflects csv start 170118
+% x_off = 107700;   %this is the offset of the ns4 file when the noise reflects csv start 170112
+x_off = 110530;   %this is the offset of the ns4 file when the noise reflects csv start 170118
 % x_off = 78935;    %this is the offset of the ns4 file when the noise reflects csv start 170111
 % x_off = 128212;   %this is the offset of the ns4 file when the noise reflects csv start 160505
 
@@ -125,20 +126,23 @@ for j=1:numUnits
     plot(tmpSmooth + j*0.1); hold on;
     
     subplot(1,3,3);
+%     figure;
     times = export_mvmt_data_for_psths.times;
     valid_valid = find(times>9.2e4 & times<2.07e6);
     [vals, inds] = sort(magnitude(valid_valid));
-    [sink_tmp]   = TNC_ExtTrigWins(tmpSmooth,times(valid_valid),[750,1000]);
+    [sink_tmp]   = TNC_ExtTrigWinsEAS(tmpSmooth,times(valid_valid),[750,1000]);
     
     plot((sink_tmp.avg - mean(sink_tmp.avg(1:500))) + (ones(1,numel(sink_tmp.avg)).*j.*0.01)); hold on;
-    drawnow;
+    drawnow;  %plots the movement-aligned related neural activity 
     
     if j==5
        
         figure(11);
+        figure;
         imagesc(sink_tmp.wins(inds,:));
         
         figure(12); hold off;
+%         figure; hold off;
         plot(tmpSmooth.*250);
         hold on;
         plot(x_vals , csv_data(:,2) ,'LineWidth',2);        

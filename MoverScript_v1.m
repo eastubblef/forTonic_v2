@@ -64,7 +64,9 @@ chan.rew = 129;                         % solenoid input and trial starts from A
 % targetName = '151119_newUnits2Behave';
 % targetName = '151118_newUnits2Behave';
 % targetName = '151106_newUnits2BehaveRxn';
-targetName = '151104_newUnits2BehaveRxn';
+% targetName = '151104_newUnits2BehaveRxn';
+
+targetName = '151119_tag3';
 
 
 if numel(targetName == 11)
@@ -82,9 +84,10 @@ elimTime = 270;                                                             % (s
 % initPath = '/Volumes/My Passport for Mac/Vgatthree_updated/151105/2ndpass/better/behaveChunks';
 % initPath ='/Users/stubblefielde/Desktop/mfiles/DudmanLab/data/spikes/recordings15/Vgatthree/151105/newBehaveUnits/behaveChunks';
 % initPath = '/Users/stubblefielde/Desktop/mfiles/DudmanLab/data/spikes/recordings15/Vgattwo/151119/behave/untag/newBehaveUnits/untagged';
+initPath = '/Users/stubblefielde/Desktop/mfiles/DudmanLab/data/spikes/recordings15/Vgattwo/151119/behave/tag';
 % initPath = '/Users/stubblefielde/Desktop/mfiles/DudmanLab/data/spikes/recordings15/Vgattwo/151118/behaveChunks/newBehaveUnits/behaveChunks';
 % initPath = '/Users/stubblefielde/Desktop/mfiles/DudmanLab/data/spikes/recordings15/Vgatthree/151106/behave/newUnits';
-initPath = '/Users/stubblefielde/Desktop/mfiles/DudmanLab/data/spikes/recordings15/Vgatthree/151104';
+% initPath = '/Users/stubblefielde/Desktop/mfiles/DudmanLab/data/spikes/recordings15/Vgatthree/151104';
 
 taskbaseFile = '*tb.mat';
 taskbase = strcat(initPath,'/', taskbaseFile);

@@ -130,7 +130,7 @@
 %      xThold = 100;  %161015 session
 %      yTholdMin = 240;  yTholdMax = 320      %161005 session
 %      xThold = 100;  xTholdMax = 115         %161005 session
-     yTholdMin = 350;  yTholdMax = 600;     %170112 session
+     yTholdMin = 350;  yTholdMax = 600;     %170112 session, 170118 also
 %      xThold = 100;  %xTholdMax = 115        %170112 session   
 %      yTholdMin = 200;  yTholdMax = 600;     %170111 session
 %      yTholdMin = 5500;  yTholdMax = 5600;   %170321 session
@@ -138,7 +138,7 @@
 %      yTholdMin = 100;  yTholdMax = 500;     %170501testBoth session         %max must be higher than the gate
    
 %     startTholdMin = 2.5e4;                                %signal that exceeds this t-hold this is the session start pulse
-    startTholdMin = 1.07e5;                                %signal that exceeds this t-hold this is the session start pulse
+    startTholdMin = 1.07e5;                                %signal that exceeds this t-hold this is the session start pulse (170112, 170118)
     
 %     startT = find(trialStrtsNSolData > startTholdMin);    %there should be a rising value and a falling value  
     startT = trialStrtsNSolData(startTholdMin:end);    %there should be a rising value and a falling value

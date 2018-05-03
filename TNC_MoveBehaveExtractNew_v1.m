@@ -283,8 +283,7 @@
     end
     RTrialIndsMax1 = 1:length(RTrialInds);
     RTrialInds = RTrialIndsMax1(wheelRfirstT == 1);  %use this to test against the rxMat
-
-        
+      
     extractWheelCsvLR = numel(wheelLfirsts) + numel(wheelRfirsts);
  
 %~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ pick up here
@@ -425,6 +424,11 @@
     wheelsRfirstValid = wheelRfirstsAligned + validsCorrection;
     wheelsILfirstValid = wheelILfirstsAligned + validsCorrection;
     wheelsIRfirstValid = wheelIRfirstsAligned + validsCorrection;
+    
+%      export_mvmt_data_for_psths.wheelALL_LfirstValid = sort(horzcat(wheelIRfirstsAligned, wheelLfirstsAligned));
+%      export_mvmt_data_for_psths.wheelALL_RfirstValid = sort(horzcat(wheelILfirstsAligned, wheelRfirstsAligned));
+    wheelALL_LfirstValid = sort(horzcat(wheelsIRfirstValid, wheelsLfirstValid));
+    wheelALL_RfirstValid = sort(horzcat(wheelsILfirstValid, wheelsRfirstValid));
     
     %sanity check - ensure that initial movements were after trial starts (i.e. diffL & diffR should be positive values)
     %Also could use these as rxn times for correct L and R-mv trials
